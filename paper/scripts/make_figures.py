@@ -32,7 +32,7 @@ def _load(name):
     return json.load(open(p)) if os.path.exists(p) else None
 
 TW = 5.5   # NeurIPS \textwidth in inches; draw at final size so label sizes are honest
-plt.rcParams.update({"font.size": 8, "axes.spines.top": False, "axes.spines.right": False,
+plt.rcParams.update({"pdf.fonttype": 42, "ps.fonttype": 42, "font.size": 8, "axes.spines.top": False, "axes.spines.right": False,
                      "figure.dpi": 200, "savefig.bbox": "tight"})
 
 
@@ -77,7 +77,7 @@ def fig_spectrum(path):
                      fontsize=6.2)
         ax.set_xticks([1, p])
     for ax in axes[:, 0]:
-        ax.set_ylabel(r"held-out $\log_{10}(E_S/E_J)$" + "\n(negative: S-weak)")
+        ax.set_ylabel(r"held-out $\log_{10}(E_S/E_J)$" + "\n(negative: lower single-site energy)")
     fig.supxlabel("rank of held-out value among the ten train-fitted directions", fontsize=8)
     fig.tight_layout()
     fig.savefig(path)

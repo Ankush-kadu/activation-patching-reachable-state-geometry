@@ -157,7 +157,7 @@ DISPLAY = {
     "C51": ("Identification-table statistics",
             r"$\mathrm{se}$ called the interaction coefficients' ``standard error''; flip rate defined as the fraction of random half-splits on which ``the fitted coefficient'' changes sign; SE-vector reduction, coefficient used for flips and aggregation over captures unstated",
             r"SE ratio of Euclidean norms of marginal SE vectors; flip rate of the $ab$ coefficient over random half-splits; capture medians"),
-    "C52": ("Reparameterisation check",
+    "C52": ("Re\\-parameterisation check",
             r"the displayed covariant pencil changes by {a:ReparamInvariance}",
             r"{c:ReparamInvariance} is an unregularised-pencil check (largest cell median); the covariant check gives {c:CovRegInvariance}"),
     "C53": ("Chart-selection denominator",

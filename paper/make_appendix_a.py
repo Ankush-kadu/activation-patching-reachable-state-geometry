@@ -65,7 +65,7 @@ correction; associated review files record the adversarial verdicts. This table 
 whether a scientific conclusion changed. All other numbers in this paper are the corrected ones.
 
 {{\scriptsize
-\setlength{{\tabcolsep}}{{3pt}}
+\setlength{{\tabcolsep}}{{2pt}}
 \renewcommand{{\arraystretch}}{{1.15}}
 \begin{{longtable}}{{@{{}}>{{\raggedright\arraybackslash}}p{{0.035\textwidth}}>{{\raggedright\arraybackslash}}p{{0.13\textwidth}}>{{\raggedright\arraybackslash}}p{{0.2\textwidth}}>{{\raggedright\arraybackslash}}p{{0.25\textwidth}}>{{\raggedright\arraybackslash}}p{{0.2\textwidth}}>{{\raggedright\arraybackslash}}p{{0.13\textwidth}}@{{}}}}
 \toprule
