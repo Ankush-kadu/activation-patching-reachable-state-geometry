@@ -75,7 +75,9 @@ results show researchers, before any readout is scored, what a patching experime
 \section{Introduction}
 \label{sec:intro}
 
-Activation patching is a central experimental tool of mechanistic interpretability. An experimenter runs the model on a prompt, replaces
+Activation patching is a central experimental tool of mechanistic interpretability, used to locate factual associations
+\citep{meng2022locating}, analyse bias mediation \citep{vig2020gender}, trace circuits
+\citep{wang2022ioi,hanna2023greater} and automate circuit discovery \citep{conmy2023acdc}. An experimenter runs the model on a prompt, replaces
 the output of one component, a \emph{site}, with its output on another prompt, and records how a readout changes
 \citep{zhang2024patching,heimersheim2024patching}. In circuit analyses the readout is often a logit difference, the
 logit of the correct answer minus that of a competing one \citep{wang2022ioi}. Suppose that replacing the output of
