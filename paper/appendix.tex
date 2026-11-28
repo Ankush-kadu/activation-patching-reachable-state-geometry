@@ -1,4 +1,39 @@
+\section{Claims and their status}
+\label{app:status}
+
+Table~\ref{tab:status} lists the main claims with the status of the evidence for each.
+
+\begin{table}[h]
+\centering\footnotesize
+\caption{Main claims and their status. \emph{Proved}: a theorem on the analysed slices. \emph{Exact}: a model-free
+consequence of which states were executed. \emph{Post hoc}: a re-analysis of captures inspected before the analysis was
+fixed. \emph{Exploratory}: an analysis chosen after seeing the data. \emph{Replicated}: a registered criterion met in
+the preregistered replication. \emph{Floor-limited}: the controls did not meet the registered resolution criterion.
+\emph{Failed}: a planned hypothesis whose criterion was not met.}
+\label{tab:status}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.17\textwidth} l@{}}
+\toprule
+claim & status & where \\
+\midrule
+On analysed slices, in the stated coordinates, the operator on the edge fixes the single-site onset $d^*$ ($\DstarAffine$ affine, $\DstarRMSNorm$ RMSNorm, $\DstarLayerNorm$ LayerNorm, $\DstarSoftmax$ softmax, $\DstarGatedLinear$ gated) & proved & \S\ref{sec:theory}, App.~\ref{app:proofs} \\
+For affine single-site designs at fixed $d\ge2$, the unresolved fraction grows with the number of sites & proved & \S\ref{sec:theory}, App.~\ref{app:proofs} \\
+\midrule
+On the matched grid, the held-out $J/S$ energy ratio exceeds $10$ for the readout-free named direction $g_R$ in $\PredMTotalCount$ captures, and for the one-at-a-time interaction $g_C$ in $\OfatRowCount$ & post hoc & \S\ref{sec:practical} \\
+Unmatched ranges inflate reverse escapes ($\EdgeFrozenEscapes$ unmatched, $\EdgeMatchedEscapes$ matched); results consistent with chart selection on the scored states inflating the apparent gap & post hoc & \S\ref{sec:pitfalls} \\
+\midrule
+Single-site evidence alone does not determine the transport contrast $T_C$ & exact & \S\ref{sec:ioi} \\
+The RMS of the executed $T_C$ is small on the tested grids (median over published captures, three base prompts) & exploratory & \S\ref{sec:ioi} \\
+On $\RepPrompts$ fresh prompts from $\RepTemplates$ templates, template medians met both smallness criteria (absolute in $\RepHAbsCount$, relative in $\RepHRelCount$ templates) & replicated & App.~\ref{app:replication} \\
+The cubic working model fitted to single-site data predicts $T_C$ poorly, and its intervals are miscalibrated & exploratory & \S\ref{sec:ioi} \\
+Whether the IOI transport contrast exceeds that of heads with no claimed role & floor-limited & \S\ref{sec:ioi}, App.~\ref{app:replication} \\
+\midrule
+Reciprocal cross-family degradation of a frozen circuit; representation-specific weak subspaces & failed & App.~\ref{app:negatives} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 % ===================================================================== B ====
+\FloatBarrier
 \section{Proofs and exact numerics}
 \label{app:proofs}
 
@@ -14,8 +49,7 @@ and $d\ge2$, then $N_R\not\subseteq N_C$ and $N_C\not\subseteq N_R$. (iii) If $m
 \end{proposition}
 
 Counts alone cannot rank these two \emph{single-site} designs on an exact slice; the proposition says nothing about
-single-site versus joint evidence in a trained model. Given $b_0=ma_0+c$, the workshop condition
-$(m,c)\neq(0,b_0)$ is equivalent to $m\neq0$.
+single-site versus joint evidence in a trained model. 
 
 \emph{Proof.} (i) Count the constraints. Each reachable set comprises two lines, whose vanishing polynomials are
 multiples of a degree-2 generator $g$. Thus $N=g\cdot\mathcal P_{\le d-2}$ has dimension $d(d-1)/2$ and profile
@@ -37,11 +71,10 @@ $\Gamma\subseteq V(P)\cap V(Q)$ with $\Gamma$ infinite. Hence $I(\Gamma)=(P)$. S
 $a-a_0$, the two irreducibles are coprime and $I(A_0\cup\Gamma)=(a-a_0)\cap(P)=((a-a_0)P)$, whose nonzero elements
 have degree at least $1+\deg P$. $\square$
 
-The workshop version assumed only that $\Gamma$ is Zariski-dense in an irreducible $V(P)$. Over $\mathbb R$ this does
+Zariski density of $\Gamma$ in an irreducible $V(P)$ would not be enough. Over $\mathbb R$ it does
 not give $I(\Gamma)=(P)$: for $P=(b-ma-c)^2$ the zero set is the irreducible line $b=ma+c$, but $I(\Gamma)=(b-ma-c)$,
-so the onset is $2$, not $1+\deg P=3$. The affine and nondegenerate normalisation instances satisfy the corrected
-hypothesis, so their onsets are unchanged. The transcendental instances are covered by the separate lemma below,
-and their infinite onsets are also unchanged.
+so the onset is $2$, not $1+\deg P=3$. This is why the theorem asks for $P$ itself to be irreducible. The affine and
+nondegenerate normalisation instances satisfy it; the transcendental instances are covered by the separate lemma below.
 
 \paragraph{Irreducibility of the normalisation quartic.} To apply the operator theorem, rule out lower-degree
 factors. Clearing the radical in
@@ -51,7 +84,7 @@ constant). As a quadratic in $X=b-\beta$ over $\mathbb R[a]$ it is $(\kappa a^2+
 discriminant $4\omega^2a^2(\kappa a^2+\epsilon)$. It factors over $\mathbb R[a]$ only if $\kappa a^2+\epsilon$ is a
 square, which it is not, since it has two distinct complex roots; a factorisation with a factor free of $X$ would
 need a common factor of $\kappa a^2+\epsilon$ and $\omega^2a^2$, and there is none. Hence $P$ is irreducible of degree
-$4$ and not an associate of $a-a_0$, and the recompute branch is an infinite subset of $V(P)$, so
+$\DstarRMSNormDegP$ and not an associate of $a-a_0$, and the recompute branch is an infinite subset of $V(P)$, so
 Theorem~\ref{thm:operator} gives $d^*=\DstarRMSNorm$.
 
 \paragraph{Transcendence of the analysed slices.}
@@ -70,7 +103,7 @@ Now let $a\to+\infty$ if $g>0$, or $a\to-\infty$ if $g<0$. Terms with $j\ge1$ de
 grows at most polynomially, forcing $p_0(a)\to0$, impossible for a nonzero polynomial. $\square$
 
 A two-key softmax edge $e(a)=\omega\exp(a)/(\exp(a)+\exp(\kappa))=\omega\,\sigma(a-\kappa)$ with $\omega\neq0$ has the
-lemma's form after a shift, so $I(\Gamma)=(0)$ and $d^*=\infty$ on that slice. For a gated linear-attention edge
+lemma's form after a shift, so $I(\Gamma)=(0)$ and $d^*=\DstarSoftmax$ on that slice. For a gated linear-attention edge
 $e(a)=(wa)\,\sigma(ga)$ with $w,g\neq0$, a relation $P(a,e(a))\equiv0$ would make $\sigma(ga)=e/(wa)$ algebraic over
 $\mathbb R(a)$ on a subinterval with nonempty interior avoiding $a=0$, and the lemma applies again. Both statements concern the analysed slice
 in the chosen coordinates (Remark~\ref{rem:scope}).
@@ -133,15 +166,17 @@ design gap & the ratio, joint over single-site, of the smallest eigenvalue of th
 \section{Protocol}
 \label{app:protocol}
 
-\paragraph{Protocol at a glance.} The following protocol underlies Sections~\ref{sec:practical} to~\ref{sec:pitfalls}; support and chart variants are
-specified with each comparison.
+\paragraph{Protocol at a glance.} The following protocol underlies Sections~\ref{sec:practical} and~\ref{sec:pitfalls}; support and chart variants are
+specified with each comparison. Profiles in the appendix are reported as $\log_{10}(E_S/E_J)=-\log_{10}r$, so the
+\emph{S-weak end} (single-site evidence weaker) is at the bottom and the \emph{reverse end} (joint evidence weaker) at
+the top; the main text's Figure~\ref{fig:regimes} plots the opposite sign.
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=1pt,parsep=0pt]
 \item \textbf{Units.} A \emph{capture} is one (site pair, seed) run, the seed selecting prompt and donors; a
 \emph{cell} is a model $\times$ task. Table~\ref{tab:predict} has $\MatchedN$ float32 captures in $\PredCells$ cells and
 $\HeldoutPrompts$ (cell, prompt) groups. Captures share models, tasks and often prompts, so counts are consistency
 checks, and we make no population claim.
 \item \textbf{Sites and chart.} Two attention-block outputs, each projected on the unembedding difference of the
-task's two answer tokens, then whitened with statistics from training rows (the archived optimised profiles use
+task's two answer tokens, then whitened with statistics from training rows (the searched profiles use
 all-row statistics, which is equivalent in exact arithmetic; see below). The head-level IOI analysis of
 \S\ref{sec:ioi} uses a different chart.
 \item \textbf{Single-site family $S$.} $32$ donors $\times$ $\NAlpha$ interpolation coefficients $\alpha\in[-0.5,1.5]$
@@ -151,7 +186,7 @@ sparse pattern; it is not a full product grid.
 \item \textbf{Class and split.} Polynomials of total degree at most $3$ ($10$ dimensions). Rows are split in half
 ($S$: $224/224$; $J$: $128/128$); directions are named or fitted on training rows, frozen, and scored on test rows.
 \item \textbf{Screen.} Captures with $\mathrm{sd}(Y_{\mathrm{joint}})<0.15$ are excluded. In
-Sections~\ref{sec:practical} to~\ref{sec:pitfalls} this is the only use of readouts, and it makes the analysed sample
+Sections~\ref{sec:practical} and~\ref{sec:pitfalls} this is the only use of readouts, and it makes the analysed sample
 readout-conditioned.
 \end{itemize}
 
@@ -166,8 +201,8 @@ of their Cartesian product. The query-chart captures of \S\ref{sec:ioi} index do
 families of Appendix~\ref{app:matched} are collected in one pass with the single-site family, on identical prompts,
 donors and weights.
 
-\paragraph{Training statistics and archived profiles.} For the named direction, the edge fit, whitening and
-column scaling use training rows only. The archived optimised
+\paragraph{Training statistics and searched profiles.} For the named direction, the edge fit, whitening and
+column scaling use training rows only. The searched
 polynomial profiles (Figure~\ref{fig:regimes}, right, \S\ref{sec:pitfalls} and Appendices~\ref{app:matched},
 \ref{app:chart} and~\ref{app:three}) estimate whitening and column scaling on all analysed rows. For a fixed chart
 and the complete, degree-ordered monomial bases used there, changing to training-row statistics is an invertible
@@ -179,9 +214,9 @@ polynomial kernel, so those energies are at rounding level under either choice. 
 itself or the Euclidean-ridge checks of Appendices~\ref{app:robust} and~\ref{app:noninvariant}.
 
 \paragraph{Precision.} All support-matched captures behind Table~\ref{tab:predict} and all IOI query-chart captures
-are float32. The earlier unmatched captures of GPT-2 on IOI and of Qwen3.5-9B-Base were produced with a bfloat16
+are float32. The unmatched-protocol captures of GPT-2 on IOI and of Qwen3.5-9B-Base were produced with a bfloat16
 model, so their recorded states as well as their readouts carry bfloat16 rounding; the other GPT-2 unmatched captures
-are float32. Comparisons with those earlier captures therefore also change precision.
+are float32. Comparisons with those unmatched-protocol captures therefore also change precision.
 
 \paragraph{Readout screen.} A capture is analysed only if $\mathrm{sd}(Y_{\mathrm{joint}})\ge0.15$. No readout enters
 the naming or scoring of a direction, but the analysed sample is conditioned on the readout through this screen.
@@ -194,7 +229,7 @@ pool the other captures' null profiles and take the $2.5$th percentile of their 
 of their maxima, leaving each capture's own nulls out. In the full-grid single-site--joint comparison, each stand-in
 family has $112$ training and $112$ test rows, against $224/224$ for $S$ and $128/128$ for $J$. These sample sizes differ,
 and captures share prompts, so the nominal $2.5\%$ escape rate is not established for the tested procedure. We report escape counts
-descriptively and any $p$-values as nominal (Appendix~\ref{app:corrections}, C32).
+descriptively and any $p$-values as nominal.
 
 \paragraph{Applying the audit to another circuit.} (1) Declare $\mathcal F$; the chosen polynomial degree limits which
 hypothesis differences the audit can assess. (2) Sweep the intervention family and record the internal states, not just
@@ -208,7 +243,8 @@ batch composition. Only steps (2) and (5) need GPU time.
 \section{Support matching in full}
 \label{app:matched}
 
-Two further protocols separate the effect of removing extrapolation from that of enlarging the joint family.
+The range comparison's registration and its results first entered version control together,
+so their order cannot be verified. Two further protocols separate the effect of removing extrapolation from that of enlarging the joint family.
 \emph{Interior} restricts the single-site family to $\alpha\in[0,1]$ and leaves the joint family at $\alpha=1$; it
 needs no new data but is conservative rather than exact. \emph{Symmetric} restricts both families to the interior
 coefficients, which answers the objection that matching helped only by enlarging the joint family. Across all
@@ -225,13 +261,13 @@ computed on all single-site rows rather than on training rows only; the paragrap
 training-row statistic $s$ of \S\ref{sec:predict}. Figure~\ref{fig:spectrum} shows the held-out profiles behind
 Table~\ref{tab:matched-full}, and Figure~\ref{fig:matched} the escape rates and their association with edge strength.
 Table~\ref{tab:predict-unmatched} repeats the $g_R$ columns of Table~\ref{tab:predict} against the unmatched joint
-family on the earlier unmatched captures.
+family on the unmatched-protocol captures.
 
 \begin{table}[!htbp]
 \centering\small
 \begin{tabular}{llcccc}
 \toprule
-model $\times$ task & protocol & low end & $q$ & reverse end & $q$ \\
+model $\times$ task & protocol & S-weak end & $q$ & reverse end & $q$ \\
 \midrule
 \multirow{4}{*}{GPT-2 $\times$ IOI}
  & joint at $1$ & \MGPTIOIFrozenSblind & $\MGPTIOIFrozenQS$ & \MGPTIOIFrozenJblind & $\MGPTIOIFrozenQJ$ \\
@@ -294,10 +330,10 @@ model $\times$ task & protocol & low end & $q$ & reverse end & $q$ \\
  & \textbf{matched} & \MQIndMatchedSblind & $\MQIndMatchedQS$ & \MQIndMatchedJblind & $\MQIndMatchedQJ$ \\
 \bottomrule
 \end{tabular}
-\caption{Escapes of the same-family envelope by the optimised profile's low end and reverse end, by protocol, over
+\caption{Escapes of the same-family envelope by the optimised profile's S-weak end and reverse end, by protocol, over
 all $\MatchedN$ support-matched captures; denominators are the screened captures in each cell. $q$ is a
 Holm-adjusted binomial $p$-value against the envelope's nominal $2.5\%$ escape rate, adjusted across cells for each
-protocol and end; it is nominal (\S\ref{sec:practical}). Under the matched protocol no cell retains a nominally
+protocol and end; it is nominal (\S\ref{sec:pitfalls}). Under the matched protocol no cell retains a nominally
 significant reverse end; under the interior protocol GPT-2 $\times$ induction and Qwen3.5-9B $\times$ induction do,
 and under the symmetric protocol GPT-2 $\times$ induction does.}
 \label{tab:matched-full}
@@ -308,8 +344,9 @@ and under the symmetric protocol GPT-2 $\times$ induction does.}
 \includegraphics[width=\textwidth]{figures/fig_spectrum.pdf}
 \caption{Held-out profiles behind Table~\ref{tab:matched-full}, support-matched protocol (joint family on the single-site $\alpha$ grid, a sparse design). For each capture (thin
 blue lines) the ten generalized eigen-directions are fitted on training rows and frozen; the plot shows their held-out
-$\log_{10}(E_S/E_J)$ energy ratios \emph{sorted by held-out value} (order statistics). Negative values indicate lower held-out energy under single-site patching.
-The low end is the minimum over the ten frozen directions, not the named generator of \S\ref{sec:predict}, and need
+$\log_{10}(E_S/E_J)$ energy ratios \emph{sorted by held-out value} (order statistics). Negative values indicate lower held-out energy under single-site patching; Figure~\ref{fig:regimes} uses the opposite
+sign, $\log_{10}r$.
+The S-weak end is the minimum over the ten frozen directions, not the named generator of \S\ref{sec:predict}, and need
 not be the first training eigenvector. The thick red line is the mean of the held-out order statistics. The grey band applies the percentiles of
 Appendix~\ref{app:protocol} to the same-family nulls of all captures in the cell, pooled, and is shown for display; the
 escape counts in the panel titles and in Table~\ref{tab:matched-full} leave each capture's own nulls out, as in
@@ -322,11 +359,11 @@ while remaining below the displayed upper bound.}
 \centering
 \includegraphics[width=\textwidth]{figures/fig_matched.pdf}
 \caption{Support matching and escapes of the same-family envelope. \emph{Left:} percentages of captures whose
-optimised profiles escape at the low (S-weak) or reverse (joint-weak) end: red bars, reverse end with the joint family at $\alpha=1$; blue bars, reverse end on
-the matched grid; black triangles, low end on the matched grid. Matching reduces reverse escapes.
+optimised profiles escape at the S-weak or reverse (joint-weak) end: red bars, reverse end with the joint family at $\alpha=1$; blue bars, reverse end on
+the matched grid; black triangles, S-weak end on the matched grid. Matching reduces reverse escapes.
 \emph{Right:} each point is a capture; edge strength (the matched analysis's all-rows statistic, logarithmic axis)
 is plotted against the binary matched-protocol reverse-escape indicator, with vertical jitter. Blue points escape at the reverse end;
-grey points do not escape at that end, although their low end may escape. Escapes are associated with stronger edges. Tick labels: G2, GPT-2; Q3.5, Qwen3.5-9B-Base; Q3-8B, Qwen3-8B;
+grey points do not escape at that end, although their S-weak end may escape. Escapes are associated with stronger edges. Tick labels: G2, GPT-2; Q3.5, Qwen3.5-9B-Base; Q3-8B, Qwen3-8B;
 ind, induction; cap, capital; gt, greater-than; agr, agreement.}
 \label{fig:matched}
 \end{figure}
@@ -350,7 +387,7 @@ all                         &                     & \PredTotalCount \\
 \bottomrule
 \end{tabular}
 \caption{Held-out $J/S$ energy ratios of the named generator $g_R$ against the unmatched joint family (raw donors,
-$\alpha=1$), repeating its columns of Table~\ref{tab:predict} on the earlier unmatched captures. The qualitative result persists ($\PredTotalCount$ above $10\times$); the magnitude of the $J/S$
+$\alpha=1$), repeating its columns of Table~\ref{tab:predict} on the unmatched-protocol captures. The qualitative result persists ($\PredTotalCount$ above $10\times$); the magnitude of the $J/S$
 ratio depends on the joint support, and the cohorts differ in precision by cell (Appendix~\ref{app:protocol}).}
 \label{tab:predict-unmatched}
 \end{table}
@@ -362,11 +399,12 @@ $\OfatNeither$, a net difference of $\OfatNetDifference$. The median $r(g_R)$ is
 $\EdgeBlindStrong$ on the $\EdgeNStrong$ strong-edge ones, of which $\EdgeStrongGtTen$ exceed $10\times$. Of the surviving reverse
 escapes of \S\ref{sec:pitfalls}, $\ReverseSurvivorsWeak$ fall below the strong-edge threshold. For the GPT-2 IOI captures, the
 single-site range of $a$ exceeds its range under the unmatched joint family by a median factor of $\FigOneBCaptureMedian$,
-the support gap behind Figure~\ref{fig:reachable}.
+the support gap behind Figure~\ref{fig:reachable}. Fitting the edge helps most where it is steep: the within-capture ratio
+$r(g_R)/r(g_C)$ rises with the absolute whitened edge slope (Spearman $\OfatSpearman$).
 
 \paragraph{The realised edge, measured.} On all $\EdgeN$ support-matched captures, the absolute Euclidean cosine between the
 recompute and clamped generators, in the fixed whitened, column-scaled coefficient basis, falls as the training-row edge strength
-$s$ defined in \S\ref{sec:predict} rises (Spearman $\EdgeCosRho$; with the absolute whitened slope it is $\EdgeCosRhoSlope$). Its median is
+$s$ (Appendix~\ref{app:glossary}) rises (Spearman $\EdgeCosRho$; with the absolute whitened slope it is $\EdgeCosRhoSlope$). Its median is
 $\EdgeWeakCos$ below $s=0.10$ and $\EdgeStrongCos$ on the $\EdgeNStrong$ captures at or above it. These cosines are
 parameterisation-dependent and descriptive; they do not show that the two designs are equivalent. On the
 strong-edge captures the median held-out ratio is $\EdgeStrongSepGC$ for $g_C$ and $\EdgeBlindStrong$ for $g_R$, and
@@ -375,11 +413,10 @@ ratios and on Table~\ref{tab:predict}: the one-at-a-time generator accounts for 
 chart, and the recompute generator has an additional advantage on stronger edges.
 
 % ===================================================================== F ====
-\clearpage
 \section{Chart selection in full}
 \label{app:chart}
 
-This experiment compares recompute single-site evidence $R$ with clamped single-site evidence $C$, not single-site
+This comparison has no dated preregistration entry. This experiment compares recompute single-site evidence $R$ with clamped single-site evidence $C$, not single-site
 with joint evidence. In the unembedding chart the absolute whitened edge slope is small (median $\RCUchartChartM$), so the
 two designs almost coincide and both ends of their optimised profiles are nominally significant in only
 $\RCUchartMutual$ cells. We therefore chose the
@@ -413,24 +450,19 @@ regulariser. The chart is therefore not ``the direction in which $A$ drives $B$'
 drives $B$ and these particular donors do not''.
 
 % ===================================================================== G ====
-\section{Two planned hypotheses that failed, and two withdrawn claims}
+\section{Hypotheses that did not survive}
 \label{app:negatives}
 
-Four planned hypotheses did not survive. Two are the withdrawn claims of \S\ref{sec:pitfalls}: (1) mutual
-non-domination of single-site and joint evidence (support confound; Appendix~\ref{app:matched}) and (2) mutual
-non-domination of recompute and clamped single-site evidence in a chart optimised on the scored states (chart
-selection; Appendix~\ref{app:chart}). The other two failed their
-criteria. Hypotheses (3) and (4) have dated preregistration records; for (1), registration and results first
-enter version control together, so their order cannot be verified; for (2), no dated preregistration entry exists.
+Two planned hypotheses had dated preregistration records and failed their criteria.
 
-\paragraph{(3) Failed hypothesis: a circuit with high in-family faithfulness degrades reciprocally across families.} We fitted and froze
+\paragraph{(1) Failed hypothesis: a circuit with high in-family faithfulness degrades reciprocally across families.} We fitted and froze
 an edge-attribution circuit under each intervention family and scored it under both. The registered gate required
 in-family faithfulness of at least $0.85$ and a cross-family drop of at least $0.25$ in both directions. It failed.
 The recovered component sets largely overlapped, but overlap alone does not show that transfer cannot degrade. A
 circuit is a set of components, whereas the ambiguity studied here lives in functional form, which a set cannot
 express.
 
-\paragraph{(4) Failed hypothesis: interpretability representations have distinctive weakly constrained subspaces.} We expected a logit
+\paragraph{(2) Failed hypothesis: interpretability representations have distinctive weakly constrained subspaces.} We expected a logit
 lens or a tuned lens to show S-weak subspaces distinguishable from matched compression controls. The registered success criterion required an effect outside the matched same-family and
 compression nulls, a nontrivial held-out effect, and a consistent direction across multiple model-by-task units.
 For $12$ GPT-2 captures in a four-dimensional chart, entries below are capture medians of the held-out energy share
@@ -438,11 +470,12 @@ $v_S=E_S/(E_S+E_J)$ of the least-energy training direction. The same-family null
 entry is the capture median of the per-capture $5$th percentile over five same-family resamples at the degree
 indicated by its column header.
 
-The arm we call the attention-output unembedding (the row the accepted version labelled ``logit lens''; C57) maps each
+The registered hypothesis named a logit lens and a tuned lens; the arms that implement them differ from the standard
+tools. The arm we call the attention-output unembedding maps each
 last-token attention-module output $A$ to $\rho(A)=\bigl((A-\bar A)/(\operatorname{sd}(A)+10^{-6})\bigr)W_U^{\top}$,
 evaluated through its isometric SVD reduction; it uses this custom standardisation rather than the model's learned final
 LayerNorm and acts on attention outputs, not residual-stream states, so it is not the conventional logit lens. The arm
-labelled ``tuned lens'' in the accepted version is a least-squares linear surrogate fitted to this attention-output
+registered as the tuned lens is a least-squares linear surrogate fitted to this attention-output
 unembedding of the first capture's patch-$A$-arm rows and reused across captures and
 sites. Of its calibration rows, $\TLCalibOverlap$ fall in that capture's scored half; only the subsequent chart
 fit is restricted to training rows.
@@ -532,7 +565,7 @@ $r(g_R)>10$ under the row split is $\HeldoutPromptBootLo\%$. Groups still share 
 
 \paragraph{Random directions.} For $200$ Gaussian directions per capture in the training-scaled coefficient basis, the
 cell medians of the capture-specific $95$th percentiles range from $\HeldoutNullLo$ to $\HeldoutNullHi$, and $g_R$
-exceeds its own capture's $95$th percentile in $\HeldoutBeatsNull$ captures (Appendix~\ref{app:corrections}, C02).
+exceeds its own capture's $95$th percentile in $\HeldoutBeatsNull$ captures.
 
 % ===================================================================== I ====
 \section{Three sites in a trained model}
@@ -546,7 +579,8 @@ $6$--$9$--$11$ and $7$--$9$--$11$, with three seeds each.
 
 \paragraph{Full rank, weakly constrained directions.} The design matrices have full numerical rank (singular-value
 tolerance $10^{-9}$) under both families, so the comparison concerns ill-conditioning. The profile reports
-single-site/joint energy, so more negative log ratios mean weaker single-site evidence. For each capture we score every
+single-site/joint energy, so more negative log ratios mean weaker single-site evidence; this is the opposite sign to
+$\log_{10}r$ in the main text. For each capture we score every
 frozen training eigenvector and take the minimum held-out log energy ratio $\log_{10}(E_S^{\mathrm{te}}/E_J^{\mathrm{te}})$. In the
 $\ThreeDegThreeDim$-dimensional degree-3 class the median over captures of these minima is $-\ThreeDegThreeLogRatio$;
 the profile minimum escapes the same-family envelope in $\ThreeDegThreeSblind$ captures and the profile maximum in
@@ -554,10 +588,10 @@ $\ThreeDegThreeReverse$. At degree $2$ ($\ThreeDegTwoDim$ dimensions) the corres
 $-\ThreeDegTwoLogRatio$, and the profile minimum escapes in $\ThreeDegTwoSblind$.
 
 % ===================================================================== J ====
-\section{Legacy robustness checks and a synthetic check of the estimator}
+\section{Further robustness checks and a synthetic check of the estimator}
 \label{app:robust}
 
-\paragraph{Charts and classes.} These are exploratory legacy checks on the earlier unmatched captures. They use a
+\paragraph{Charts and classes.} These are exploratory checks on the unmatched captures. They use a
 Euclidean ridge $G_Q+10^{-10}I$ rather than the covariant pencil, and whitening and feature scaling estimated on all
 rows; the data-derived charts and the non-polynomial classes therefore also use evaluation states. Only the
 eigensolve is fitted on the training half, so these are not held-out validations in the sense of
@@ -566,7 +600,7 @@ eigensolve is fitted on the training half, so these are not held-out validations
 \begin{center}\small
 \begin{tabular}{lr}
 \toprule
-chart (eight GPT-2 captures) & median $J/S$ ratio, legacy procedure \\
+chart (eight GPT-2 captures) & median $J/S$ ratio (Euclidean ridge) \\
 \midrule
 $u$ (unembedding difference) & $\CoordUSblind$ \\
 top activation principal component & $\CoordPConeSblind$ \\
@@ -588,9 +622,8 @@ random Fourier (different class) & $\BGPTFourierSblind$ & $\BQwenFourierSblind$ 
 \end{tabular}
 \end{center}
 
-\noindent The workshop version also reported a Taylor row as an invariance check. It was built with a zero centre,
-i.e.\ the identical design matrix, so its exact agreement with the polynomial row is not a check, and it is removed
-(Appendix~\ref{app:corrections}, C39). Magnitudes differ across classes, as Definition~\ref{def:blind} predicts, and
+\noindent A Taylor class with a zero centre has the identical design matrix to the polynomial row, so it is not an
+independent check and is not reported. Magnitudes differ across classes, as Definition~\ref{def:blind} predicts, and
 we never compare them as though the classes shared a geometry.
 
 \paragraph{A synthetic check of subspace membership.} In synthetic union-of-slices data with a planted generator $g$,
@@ -603,34 +636,31 @@ subspace membership, not recovery of a unique generator, and it is basis-depende
 \section{Non-invariant checks and worst-case bounds}
 \label{app:noninvariant}
 
-\paragraph{Covariant pencil.} Under $\varphi\mapsto L\varphi$ every term of the pencil of \S\ref{sec:practical} transforms as
+\paragraph{Covariant pencil.} Under $\varphi\mapsto L\varphi$ every term of the pencil of \S\ref{sec:pitfalls} transforms as
 $L(\cdot)L^\top$, so its spectrum is invariant in exact arithmetic. In a numerical check of the unregularised pencil on
-the earlier unmatched captures, the largest cell median of the per-capture maximum relative eigenvalue change under a
+the unmatched-protocol captures, the largest cell median of the per-capture maximum relative eigenvalue change under a
 reparameterisation is $\ReparamInvariance$. A Euclidean ridge on $G_Q$ and Euclidean coefficient angles or cosines are
 not invariant; they are used only in Appendices~\ref{app:matched}, \ref{app:robust} and~\ref{app:noninvariant}, as
-descriptive, legacy or non-invariance checks.
+descriptive, Euclidean-ridge or non-invariance checks.
 
 \paragraph{Euclidean ridge.} $G_Q+\lambda I$ does not transform covariantly under $\varphi\mapsto L\varphi$ for
 non-orthogonal $L$. Under a reparameterisation of condition number $50$ on the Qwen3.5-9B IOI captures, the
 $\lambda=10^{-6}$ spectrum moves by a median relative $\EucRegInvariance$, against $\CovRegInvariance$ for the covariant
-regulariser of \S\ref{sec:practical}.
+regulariser of \S\ref{sec:pitfalls}.
 
 \paragraph{Principal angles.} Euclidean angles between coefficient subspaces depend on the parameterisation of the
-coefficient space. On the earlier unmatched captures, the principal angles between the low-energy eigenspaces of the single-site and
+coefficient space. On the unmatched-protocol captures, the principal angles between the low-energy eigenspaces of the single-site and
 joint training Grams have a median of $\AngleBefore^\circ$. Recomputing both eigenspaces after a random
 reparameterisation of the same condition number gives $\AngleAfter^\circ$. Both summaries are medians over model--task
-cells of within-cell medians of per-capture median angles. We report no principal-angle quantity as evidence; the workshop version used such angles as a
-stability check, and they are removed (Appendix~\ref{app:corrections}, C34).
+cells of within-cell medians of per-capture median angles. Because of this dependence we report no principal-angle quantity as evidence.
 
 \paragraph{Worst-case spectral bounds are vacuous here.} Treating the finite intervention grid as a population, a
 matrix Bernstein inequality \citep{tropp2015introduction} bounds $\|\widehat G_Q-G_Q\|$; for a two-sided deviation of a
 Hermitian sum the intrinsic-dimension version carries a factor $8\,\mathrm{intdim}$ and holds only above a threshold
-deviation (C15). The Davis--Kahan bound \citep{yu2015davis} then limits $\|\sin\Theta\|_F$ for the bottom-$k$
+deviation. The Davis--Kahan bound \citep{yu2015davis} then limits $\|\sin\Theta\|_F$ for the bottom-$k$
 eigenspace ($k=3$) by $2\sqrt k\,\|\widehat G-G\|/\gamma_k$, where $\gamma_k=\lambda_{k+1}-\lambda_k$ in increasing
 order. For the joint family the median relative gap at that boundary is $\FSGPTEigengapBottomRel$ (GPT-2) and
-$\FSQwenEigengapBottomRel$ (Qwen3.5-9B). The workshop version took the gap at the top of the spectrum and used the
-understated constant, and both corrections enlarge the bound, so it is vacuous a fortiori; its numerical bounds are
-withdrawn (C38). The measured log--log concentration slopes of the single-site family, $\FSGPTRateSlope$ and
+$\FSQwenEigengapBottomRel$ (Qwen3.5-9B). With these gaps the bound exceeds its trivial value, so we report no numerical bound. The measured log--log concentration slopes of the single-site family, $\FSGPTRateSlope$ and
 $\FSQwenRateSlope$ against a theoretical $-0.5$, are consistent with the rate but span under one decade of $n$.
 Nothing here is used as a guarantee.
 
@@ -647,8 +677,7 @@ rows in a fixed finite grid. We make no certification claim.
 \begin{table}[t]
 \centering\small
 \caption{Fit, prediction, Wald envelopes and coverage of the working model on the published IOI head pairs
-\status{exploratory; three base prompts; $\MisN$
-captures}. Compare the prediction errors with predicting zero, and the envelope widths with their coverage. $R^2$ rows: median over ten donor partitions of the median over captures; ``additive terms only'' is a
+(exploratory; three base prompts; $\MisN$ captures). Compare the prediction errors with predicting zero, and the envelope widths with their coverage. $R^2$ rows: median over ten donor partitions of the median over captures; ``additive terms only'' is a
 separate additive-only refit. Contrast rows use donor partition seed $0$; RMS entries are medians over captures. Predicting $0$ has an error
 equal to the RMS of the executed $T_C$ over these held-out joint rows, a subset of the states behind the median RMS
 in the text.
@@ -682,8 +711,22 @@ Movers.
 
 \paragraph{The executed contrast in detail.} Across the captures on the three base prompts, the interquartile range of
 the RMS of $T_C$ is $\AdqRmsTLo$--$\AdqRmsTHi$ logits. Normalising each capture's RMS by its mean absolute per-donor effect at
-$\alpha\approx1$ (median $\AdqEffectAlphaOne$ logits) gives a median percentage of $\AdqRmsTPctEffect\%$.
+$\alpha\approx1$ (for each donor, the mean of the $B$-arm readouts at $\alpha=5/6$ and $7/6$ minus the clean readout;
+median $\AdqEffectAlphaOne$ logits) gives a median percentage of $\AdqRmsTPctEffect\%$.
 The largest single $|T_C|$ in a capture is a median $\AdqMaxTPctEffect\%$ of that effect, and about $\MfMaxAbsMax$ logits at the maximum.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_scales.pdf}
+\caption{The working model cannot stand in for the executed contrast (exploratory; three base prompts). Each horizontal
+position is one capture, published S-Inhibition $\to$ Name Mover pairs on the left and controls on the right, sorted by
+single-site width. Triangles and open squares are the single-site and joint working-model widths, each a median over
+joint states; circles are the RMS of the executed $T_C$ (log scale, logits). For published heads the median
+single-site width is $\AdqEnvSOverRmsT$ times the median executed RMS. The widths come from a misspecified model and are
+neither observed errors nor calibrated bounds. The dotted line, the median floor of the replication's published
+captures, is only a scale reference.}
+\label{fig:scales}
+\end{figure}
 
 \paragraph{The working model and its chart.} The working model of \S\ref{sec:ioi} uses a fixed, weight-derived chart
 motivated by the published claim that S-Inhibition heads act on the Name Movers' query. The upstream coordinate $a$ is
@@ -723,10 +766,6 @@ inconsistent with the joint estimate $\gamma_J$ in $\DetInconsistent$ single-sit
 overall), and the joint test's nominal plug-in power at $\gamma_S$ rounds to $\DetPowerMin$: had $\gamma_S$ been the joint
 fit's target, the joint test would almost always have rejected.
 
-\paragraph{Relation to the workshop version.} The Wald-envelope percentages here replace the workshop version's, which
-evaluated two of the four terms of the contrast and named the wrong denominator (Appendix~\ref{app:corrections},
-C05--C07).
-
 \paragraph{Working-model identification widths.} The widths (computed from nominal Wald regions) of single-site working-model fits vary with degree, covariance and prompt.
 Percentages are medians over captures (all $\MisN$ published captures, or those of one prompt where stated)
 of each capture's single-site envelope divided by its B-arm swing and expressed as a percentage. By degree: $\EnvSDtwo$ (degree $2$), $\MisS$ ($3$), $\EnvSDfour$ ($4$); the single-site
@@ -757,7 +796,7 @@ strength of the published pairs is $\QCEdgeVsCtrl\times$ that of the control pai
 (exact one-sided Mann--Whitney $p=\HeadEdgeExactP$, the smallest attainable). Each head's value first averages
 $\log_{10}s$ over prompts whose capture passed the screen, then over its Name Movers. This is a descriptive
 conditional permutation summary, since the heads share Name Movers, prompts and the model. It is
-consistent with query mediation and is not a test of it.
+consistent with query mediation and is not a test of it. The control source heads also sit in earlier layers (0--3) than the published ones (7--8), so this separation does not distinguish claimed role from depth.
 
 \paragraph{Head groups, with heads as units.} We repeat the procedure on previous-token $\to$ induction heads and on
 the control group. Induction heads read previous-token information through keys; the final-position query chart and final-position patch do not test that
@@ -767,8 +806,8 @@ $\GrpIndInfoRatio$ and $\GrpCtrlInfoRatio$. The gap is largest for the controls,
 property of the design, not evidence about IOI; the association is largely structural, because a small patch-$A$
 spread of $b$ reduces single-site cross-term information. With source heads as units ($n=\HeadRhoN$), the rank
 correlation between edge and gap is $\HeadRho$ (exact permutation $p=\HeadRhoP$ one-sided, $\HeadRhoPTwo$ two-sided), a
-descriptive conditional permutation summary, since heads share target heads, prompts and the model; the workshop
-version's configuration-level $p$-values treated captures that share heads and prompts as independent. For the induction group,
+descriptive conditional permutation summary, since heads share target heads, prompts and the model. Configuration-level
+$p$-values would wrongly treat captures that share heads and prompts as independent. For the induction group,
 single-site evidence rejects $\gamma=0$ in $\AdqIndRejSHomo$ captures under a pooled covariance and in
 $\AdqIndRejSLo$--$\AdqIndRejSHi$ of $\GrpIndN$ under the alternative covariances; the marginal-sum joint test rejects in
 $\AdqIndRejJTwo$. 
@@ -862,16 +901,12 @@ and \citet{finlayson2021causal}.
 
 A claim ledger supplies the reported numerical results and records each number's source artifacts by hash, unit
 and aggregation. Verification re-derives the recorded numerical results from the stored artifacts and compares their formatted
-values and artifact hashes. Appendix~\ref{app:corrections} is generated separately from the correction ledger, which records an
-independent verification check for each entry; associated review files record the adversarial verdicts. The scope and
-interpretation of each result are checked separately.
+values and artifact hashes. The scope and interpretation of each result are checked separately.
 
-The release accompanying this version, at
-\url{https://github.com/Ankush-kadu/activation-patching-reachable-state-geometry}, contains the analysis code, the intervention captures including the replication's, the claim ledger, the
-preregistration with its frozen hashes, the correction ledger and the manuscript sources; the source of this exact version also accompanies the arXiv record. Verifying the claims and
-rebuilding the paper need only a CPU; re-collecting captures needs a GPU. Two summary artifacts of the workshop
-version had no generating script (the mediator-interaction comparison and the path-patching controls); the
-corresponding appendix sections are removed.
+The release at
+\url{https://github.com/Ankush-kadu/activation-patching-reachable-state-geometry} contains the analysis code, the
+intervention captures including the replication's, the claim ledger, the preregistration with its frozen hashes and
+the manuscript sources. Verifying the claims and rebuilding the paper need only a CPU; re-collecting captures needs a GPU.
 
 Large language models assisted with code, protocol drafting, algebraic checking, adversarial review, writing and
 literature search. Reported measurements come from executed model interventions and from analyses of stored
@@ -922,7 +957,7 @@ ten times their floor.
 arms share downstream coordinates, and pinned coordinates do not move.
 \item[(V4)] At least half of the published captures
 and at least five templates remain analysable; $\RepScreenedOut$ captures failed the screen, $\RepErrors$ raised errors,
-and all eight templates were analysable.
+and every template was analysable.
 \item[(V5)] Captures with a B-arm swing below $\MfSwingThr$ logits are excluded and
 reported; none was.
 \end{description}

@@ -73,11 +73,10 @@ def fig_spectrum(path):
         for i in range(n):
             ax.plot(x, np.sort(spec[i]), color="C0", alpha=0.35, lw=0.8, zorder=2)
         ax.plot(x, np.sort(spec, axis=1).mean(0), color="C3", lw=1.6, zorder=3)
-        ax.set_title(f"{SHOW.get(k, k)}\nlow {d['below']}/{d['n']}\nreverse {d['above']}/{d['n']}",
+        ax.set_title(f"{SHOW.get(k, k)}\nS-weak {d['below']}/{d['n']}\nreverse {d['above']}/{d['n']}",
                      fontsize=6.2)
         ax.set_xticks([1, p])
-    for ax in axes[:, 0]:
-        ax.set_ylabel(r"held-out $\log_{10}(E_S/E_J)$" + "\n(negative: lower single-site energy)")
+    fig.supylabel(r"held-out $\log_{10}(E_S/E_J)$ (negative: lower single-site energy)", fontsize=8)
     fig.supxlabel("rank of held-out value among the ten train-fitted directions", fontsize=8)
     fig.tight_layout()
     fig.savefig(path)
@@ -112,16 +111,17 @@ def fig_regimes(path):
     M = _load("matched_invariant.json")
     d = (M["cells"]["GPT-2 ioi"]["matched"] if M and "GPT-2 ioi" in M.get("cells", {})
          else INV.get("GPT-2 IOI"))
-    spec = np.array(d["spectra"])
-    lo, hi = d["null_lo"], d["null_hi"]
+    # main-text orientation: log10 r = log10(E_J/E_S) = -log10(E_S/E_J); single-site-weak end positive, ranked first
+    spec = -np.array(d["spectra"])
+    lo, hi = -d["null_hi"], -d["null_lo"]
     ax2.axhspan(lo, hi, color="0.85", zorder=0)
     x = np.arange(1, spec.shape[1] + 1)
     for i in range(spec.shape[0]):
-        ax2.plot(x, np.sort(spec[i]), color="C0", alpha=0.35, lw=0.8)
-    ax2.plot(x, np.sort(spec, axis=1).mean(0), color="C3", lw=1.7)
+        ax2.plot(x, np.sort(spec[i])[::-1], color="C0", alpha=0.35, lw=0.8)
+    ax2.plot(x, np.sort(spec, axis=1)[:, ::-1].mean(0), color="C3", lw=1.7)
     ax2.set_xticks([1, 5, 10])
-    ax2.set_xlabel("rank of held-out value\n(ten train-fitted directions)", fontsize=7.5)
-    ax2.set_ylabel(r"held-out $\log_{10}(E_S/E_J)$" + "\n(negative: lower single-site energy)", fontsize=7.5)
+    ax2.set_xlabel("searched directions, sorted by held-out value\n(ten per capture)", fontsize=7.5)
+    ax2.set_ylabel(r"held-out $\log_{10} r=\log_{10}(E_J/E_S)$" + "\n(positive: lower single-site energy)", fontsize=7.5)
     ax2.set_title("trained model, tested cubic class:\nfinite evidence is ill-conditioned", fontsize=8)
     ax2.axhline(0, color="0.55", lw=0.6, ls=":")
     fig.tight_layout(w_pad=2.5)
@@ -175,7 +175,7 @@ def fig_reachable(path, capture="ioi_matched_gpt2_5_10_0.npz"):
         r = np.ptp(Zs[:, 0]) / max(np.ptp(Zjx[:, 0]), 1e-30)
         ax.set_title(ttl, fontsize=7.5)
         ax.set_xlabel("$a$ (site $A$)", fontsize=7.5)
-    axes[1].legend(fontsize=6.2, frameon=False, loc="upper left", markerscale=2.2, borderaxespad=0.1)
+    axes[1].legend(fontsize=6.2, frameon=False, loc="lower left", markerscale=2.2, borderaxespad=0.1)
     axes[1].set_ylabel("$b$ (site $B$)", fontsize=7.5)
     fig.tight_layout(w_pad=1.2)
     fig.savefig(path)
@@ -200,7 +200,7 @@ def fig_matched(path):
     sb = [100 * M["cells"][k]["matched"]["below"] / M["cells"][k]["matched"]["n"] for k in cells]
     ax.bar(x - w / 2, fr, w, color="C3", label="reverse end, joint at $\\alpha=1$")
     ax.bar(x + w / 2, mt, w, color="C0", label="reverse end, matched $\\alpha$ grid")
-    ax.plot(x, sb, "k^", ms=5, label="low end, matched")
+    ax.plot(x, sb, "k^", ms=5, label="S-weak end, matched")
     ax.set_ylabel("% of captures escaping\nthe same-family envelope")
     ax.set_xticks(x)
     short = {"GPT-2": "G2", "Qwen3.5": "Q3.5", "Qwen3-8B": "Q3-8B"}
